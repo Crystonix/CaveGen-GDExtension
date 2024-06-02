@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://401bhb1p7yon"]
+
+[ext_resource type="Texture2D" uid="uid://wjgxqtmip264" path="res://icon.svg" id="1_p054y"]
+
+[node name="Main" type="Node2D"]
+
+[node name="CAErosion" type="CAErosion" parent="."]
+position = Vector2(4.72093, 19.1427)
+
+[node name="Sprite2D" type="Sprite2D" parent="CAErosion"]
+texture = ExtResource("1_p054y")
