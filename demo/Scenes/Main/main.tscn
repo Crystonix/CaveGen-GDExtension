@@ -1,11 +1,31 @@
 [gd_scene load_steps=2 format=3 uid="uid://401bhb1p7yon"]
 
-[ext_resource type="Texture2D" uid="uid://wjgxqtmip264" path="res://icon.svg" id="1_p054y"]
+[ext_resource type="Script" path="res://Scenes/Main/main.gd" id="1_pvdhs"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("texture_rect")]
+script = ExtResource("1_pvdhs")
+texture_rect = NodePath("CanvasLayer/Control/TextureRect")
 
-[node name="CAErosion" type="CAErosion" parent="."]
-position = Vector2(4.72093, 19.1427)
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="CAErosion"]
-texture = ExtResource("1_p054y")
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+custom_minimum_size = Vector2(512, 512)
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+stretch_mode = 5
