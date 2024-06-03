@@ -16,7 +16,8 @@ var voxel_data:Array = []
 
 func _ready():
 	var ca:CAErosion = CAErosion.new()
-	print(ca.get_cell_state(0,0))
+	ca.initialize_grid()
+	ca.print_grid()
 	#voxel_data = generate_initial_voxel_data(GRID_SIZE)
 	#await get_tree().create_timer(1).timeout
 	#update_texture(voxel_data)
