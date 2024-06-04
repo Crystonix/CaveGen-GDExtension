@@ -66,27 +66,43 @@ void CAErosion::erode(int iterations)
         for (int x = 0; x < grid.size(); ++x) {
             for (int y = 0; y < grid[x].size(); ++y) {
                 int neighbor_count = get_neighbour_count(x, y);
-                new_grid[x][y] = (grid[x][y] ? neighbor_count > 4 : neighbor_count < 4);
+
+                bool new_cell_state;
+
+                if (grid[x][y])
+                {
+                    if (neighbor_count < 4) new_cell_state = false; else new_cell_state = true;
+                } else {
+                    if (neighbor_count > 4) new_cell_state = true; else new_cell_state = false;
+                }
+                
+                new_grid[x][y] = new_cell_state;
             }
         }
         grid.swap(new_grid);
     }
 }
 
-int CAErosion::get_neighbour_count(int x,int y){
+int CAErosion::get_neighbour_count(int x,int y)
+{
     int count = 0;
     for (int i = -1; i <= 1; i++)
     {
         for (int j = -1; j <= 1; j++)
         {
-            if (i == 0 && j == 0) continue;
+            if (i == 0 && j == 0) 
+            {
+                continue;
+            } 
 
             int nx = x + i;
             int ny = y + j;
 
-            if (nx >= 0 && nx < grid.size() && ny >= 0 && ny < grid[x].size())
+            if (nx >= 0 && nx < grid.size() && ny >= 0 && ny < grid[nx].size())
             {
-                if (get_cell_state(nx,ny) == true) count++;
+                if (grid[nx][ny]) {
+                    count += 1;
+                }
             }
         }
     }
