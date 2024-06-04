@@ -25,6 +25,7 @@ image = SubResource("Image_ygh8v")
 script = ExtResource("1_pvdhs")
 texture_rect = NodePath("UI/Control/CA_MarginContainer/CATextureRect")
 timer = NodePath("Timer")
+GRID_SIZE = 128
 noise_threshold = 0.1
 
 [node name="UI" type="CanvasLayer" parent="."]
