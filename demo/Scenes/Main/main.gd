@@ -5,46 +5,49 @@ extends Node2D
 @export var cam:Camera2D
 
 @export_category("Grid")
-@export var GRID_SIZE:Vector2 = Vector2(512,512)
-@export_range(0,1,0.05) var init_threshold:float = 0.45
+@export_range(10,1024,1) var GRID_SIZE:int = 128
+@export_range(0,1,0.05) var noise_threshold:float = 0.45
 
 @export_category("CA")
-@export_range(0,50,1) var Iterations:int = 4
-@export_range(0.1,0.5,0.1) var animation:float = 0.1
+@export_range(1,100,.1) var iterations:int = 5
+@export_color_no_alpha var c_true = Color.WHITE;
+@export_color_no_alpha var c_false = Color.BLACK;
 
-var voxel_data:Array = []
+var ca:CAErosion;
 
 func _ready():
-	var ca:CAErosion = CAErosion.new()
-	ca.initialize_grid()
-	ca.print_grid()
-	#voxel_data = generate_initial_voxel_data(GRID_SIZE)
-	#await get_tree().create_timer(1).timeout
-	#update_texture(voxel_data)
-	
+	ca = CAErosion.new()
+	ca.initialize_grid(GRID_SIZE,GRID_SIZE,false)
+	ca.generate_noise(noise_threshold)
+	update_texture(ca)
+
 func generate_initial_voxel_data(size:Vector2) -> Array:
 	var grid:Array = []
 	for y in range(size.y):
 		var row:Array = []
 		for x in range(size.x):
-			if randf() < init_threshold:
+			if randf() < noise_threshold:
 				row.append(255.0)
 			else:
 				row.append(0.0)
 		grid.append(row)
 	return grid
-	
-func create_texture_from_voxel_data(p_grid:Array) -> ImageTexture:
-	var width:int = p_grid.size()
-	var height:int = p_grid[0].size()
-	
-	var image = Image.create(width, height, false, Image.FORMAT_RGBA8)
-	
-	for x in range(width):
-		for y in range(height):
-			var color_value = p_grid[x][y]
-			image.set_pixel(x, y, Color(color_value / 255.0, color_value / 255.0, color_value / 255.0))
-	return ImageTexture.create_from_image(image)
 
-func update_texture(p_data:Array):
-	texture_rect.set_texture(create_texture_from_voxel_data(p_data))
+func update_texture(p_ca:CAErosion):
+	var image:Image = Image.create(p_ca.get_GRID_WIDTH(), p_ca.get_GRID_HEIGTH(), false, Image.FORMAT_RGB8) 
+	
+	for x in range(p_ca.get_GRID_WIDTH()):
+		for y in range(p_ca.get_GRID_HEIGTH()):
+			if p_ca.get_cell_state(x,y) == true:
+				image.set_pixel(x, y,c_true)
+			else:
+				image.set_pixel(x,y,c_false)
+	texture_rect.set_texture(ImageTexture.create_from_image(image))
+
+func _on_erode_button_pressed():
+	ca.erode(iterations)
+	update_texture(ca)
+
+func _on_init_button_pressed():
+	ca.generate_noise(noise_threshold)
+	update_texture(ca)
