@@ -35,7 +35,10 @@ CAErosion::~CAErosion(){
 }
 
 void CAErosion::initialize_grid(int p_width, int p_height, bool state){
-    grid.resize(p_width, std::vector<bool>(p_height, state));
+    grid.resize(p_width);
+    for (int i = 0; i < p_width; ++i) {
+        grid[i].resize(p_height, state);
+    }
 }
 #pragma endregion
 
