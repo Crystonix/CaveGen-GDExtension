@@ -7,7 +7,7 @@ extends Node2D
 @export var timer:Timer
 
 @export_category("Grid")
-@export_range(10,1024,1) var GRID_SIZE:int = 32
+@export_range(10,1024,1) var GRID_SIZE:int = 128
 @export_range(0,1,0.05) var noise_threshold:float = 0.45
 
 @export_category("CA")
@@ -16,7 +16,7 @@ extends Node2D
 
 @export_category("Erosion")
 @export var step_size:int = 1
-@export_range(1,10,0.01) var speed_mod:float = 0.01
+@export_range(0.01,4,0.01) var speed_mod:float = 0.01
 @export_range(1,100,.1) var erode_batch_size:int = 5
 
 var ca:CAErosion;
