@@ -1,3 +1,4 @@
+#pragma region Prep
 #include "ca_erosion.h"
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -7,6 +8,7 @@
 #include <vector>
 
 using namespace godot;
+#pragma endregion
 
 void CAErosion::_bind_methods(){
     ClassDB::bind_method(D_METHOD("initialize_grid","width","height","state"), &CAErosion::initialize_grid);
@@ -22,6 +24,8 @@ void CAErosion::_bind_methods(){
     //ClassDB::add_property("test",PropertyInfo(Variant::FLOAT,"speed"), "set_width","get_speed");
     //ADD_SIGNAL(MethodInfo("test_signal", PropertyInfo(Variant::String, "data")));
 }
+
+#pragma region Init
 CAErosion::CAErosion(){
     initialize_grid();
 }
@@ -30,36 +34,19 @@ CAErosion::~CAErosion(){
     initialize_grid();
 }
 
-bool CAErosion::get_cell_state(int x, int y) {
-    return grid[x][y];
-}
-
-void CAErosion::set_cell_state(int x, int y, bool state) {
-    grid[x][y] = state;
-}
-
 void CAErosion::initialize_grid(int p_width, int p_height, bool state){
     grid.resize(p_width, std::vector<bool>(p_height, state));
 }
+#pragma endregion
 
-void CAErosion::clear_grid()
-{
-    for (int x = 0; x < grid.size();++x)
-    {
-        for (int y = 0; y < grid[x].size(); ++y)
-        {
-            grid[x][y] = false;
-        }   
-    }
-}
-
-void CAErosion::print_grid() {
-    for (const auto& row : grid)
-    {
-        for (auto cell : row)
-        {
-            UtilityFunctions::print(cell);
-        }   
+#pragma region Main_Code
+void CAErosion::generate_noise(float p) {
+    for (int y = 0; y < grid.size(); ++y) {
+        for (int x = 0; x < grid[y].size(); ++x) {
+            if (p < UtilityFunctions::randf()) {
+                grid[y][x] = true;
+            }
+        }
     }
 }
 
@@ -103,17 +90,19 @@ int CAErosion::get_neighbour_count(int x,int y){
     return count;
 }
 
-void CAErosion::generate_noise(float p) {
-    for (int y = 0; y < grid.size(); ++y) {
-        for (int x = 0; x < grid[y].size(); ++x) {
-            if (p < UtilityFunctions::randf()) {
-                grid[y][x] = true;
-            }
-        }
+void CAErosion::clear_grid()
+{
+    for (int x = 0; x < grid.size();++x)
+    {
+        for (int y = 0; y < grid[x].size(); ++y)
+        {
+            grid[x][y] = false;
+        }   
     }
 }
+#pragma endregion
 
-
+#pragma region get, set,print
 int CAErosion::get_GRID_WIDTH()
 {
     return grid.size();
@@ -123,3 +112,22 @@ int CAErosion::get_GRID_HEIGHT()
 {
     return grid[0].size();
 }
+
+bool CAErosion::get_cell_state(int x, int y) {
+    return grid[x][y];
+}
+
+void CAErosion::set_cell_state(int x, int y, bool state) {
+    grid[x][y] = state;
+}
+
+void CAErosion::print_grid() {
+    for (const auto& row : grid)
+    {
+        for (auto cell : row)
+        {
+            UtilityFunctions::print(cell);
+        }   
+    }
+}
+#pragma endregion
