@@ -22,6 +22,7 @@ namespace godot
             CAErosion();
             ~CAErosion();
             void initialize_grid(int width = 128, int height = 128, bool state = false);
+            void clear_grid();
 
             void erode(int iterations = 3);
             void generate_noise(float p = 0.5);

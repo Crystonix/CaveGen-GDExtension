@@ -18,6 +18,7 @@ void CAErosion::_bind_methods(){
     ClassDB::bind_method(D_METHOD("get_neighbour_count","x","y"), &CAErosion::get_neighbour_count);
     ClassDB::bind_method(D_METHOD("get_GRID_WIDTH"), &CAErosion::get_GRID_WIDTH);
     ClassDB::bind_method(D_METHOD("get_GRID_HEIGTH"), &CAErosion::get_GRID_HEIGHT);
+    ClassDB::bind_method(D_METHOD("clear_grid"), &CAErosion::clear_grid);
     //ClassDB::add_property("test",PropertyInfo(Variant::FLOAT,"speed"), "set_width","get_speed");
     //ADD_SIGNAL(MethodInfo("test_signal", PropertyInfo(Variant::String, "data")));
 }
@@ -41,10 +42,21 @@ void CAErosion::initialize_grid(int p_width, int p_height, bool state){
     grid.resize(p_width, std::vector<bool>(p_height, state));
 }
 
+void CAErosion::clear_grid()
+{
+    for (int x = 0; x < grid.size();++x)
+    {
+        for (int y = 0; y < grid[x].size(); ++y)
+        {
+            grid[x][y] = false;
+        }   
+    }
+}
+
 void CAErosion::print_grid() {
     for (const auto& row : grid)
     {
-        for (bool cell : row)
+        for (auto cell : row)
         {
             UtilityFunctions::print(cell);
         }   
@@ -64,7 +76,7 @@ void CAErosion::erode(int iterations)
         for (int x = 0; x < grid.size(); ++x) {
             for (int y = 0; y < grid[x].size(); ++y) {
                 int neighbor_count = get_neighbour_count(x, y);
-                new_grid[x][y] = (grid[x][y] ? neighbor_count < 4 : neighbor_count > 4);
+                new_grid[x][y] = (grid[x][y] ? neighbor_count > 4 : neighbor_count < 4);
             }
         }
         grid.swap(new_grid);

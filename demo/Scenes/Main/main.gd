@@ -1,17 +1,22 @@
 @tool
 extends Node2D
+
 @export_category("Exports")
 @export var texture_rect:TextureRect
-@export var cam:Camera2D
+@export var timer:Timer
 
 @export_category("Grid")
 @export_range(10,1024,1) var GRID_SIZE:int = 128
 @export_range(0,1,0.05) var noise_threshold:float = 0.45
 
 @export_category("CA")
-@export_range(1,100,.1) var iterations:int = 5
 @export_color_no_alpha var c_true = Color.WHITE;
 @export_color_no_alpha var c_false = Color.BLACK;
+
+@export_category("Erosion")
+@export var step_size:int = 1
+@export_range(1,10,0.01) var speed_mod:float = 0.01
+@export_range(1,100,.1) var erode_batch_size:int = 5
 
 var ca:CAErosion;
 
@@ -45,9 +50,20 @@ func update_texture(p_ca:CAErosion):
 	texture_rect.set_texture(ImageTexture.create_from_image(image))
 
 func _on_erode_button_pressed():
-	ca.erode(iterations)
+	ca.erode(erode_batch_size)
 	update_texture(ca)
 
 func _on_init_button_pressed():
+	ca.clear_grid()
 	ca.generate_noise(noise_threshold)
+	update_texture(ca)
+
+func _on_animate_erosion_button_pressed():
+	timer.start(1 * speed_mod)
+
+func _on_stop_erosion_button_pressed():
+	timer.stop()
+
+func _on_timer_timeout():
+	ca.erode(step_size)
 	update_texture(ca)
